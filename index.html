@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>todo_list</title>
+    <link rel="stylesheet" href="https://g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet" href="./css/index.min.css">
+</head>
+<body>
+    <div id="app">
+        <!-- page集合的容器，里面放多个平行的.page，其他.page作为内联页面由路由控制展示 -->
+        <div class="page-group">
+            <!-- 单个page ,第一个.page默认被展示-->
+            <div class="page page-current">
+                <!-- 标题栏 -->
+                <header class="bar bar-nav">
+                    <a class="icon icon-left pull-left"></a>
+                    <h1 class="title"> Todo List </h1>
+                    <a class="icon icon-edit pull-right"
+                        @click="add"
+                    ></a>
+                </header>
+    
+                <!-- 工具栏 -->
+                <nav class="bar bar-tab">
+                    <a class="tab-item external" href="#"
+                        :class="activeIndex == 0 ? 'active' : ''"
+                        @click.stop="active(0)"
+                    >
+                        <span class="tab-label">全部</span>
+                    </a>
+                    <a class="tab-item external" href="#"
+                        :class="activeIndex == 1 ? 'active' : ''"
+                        @click.stop="active(1)"
+                    >
+                        <span class="tab-label">完成</span>
+                    </a>
+                    <a class="tab-item external" href="#"
+                        :class="activeIndex == 2 ? 'active' : ''"
+                        @click.stop="active(2)"
+                    >
+                        <span class="tab-label">待办</span>
+                    </a>
+                </nav>
+    
+                <!-- 这里是页面内容区 -->
+                <div class="content">
+                    <!-- <div class="content-block">这里是content</div> -->
+                    <div class="card"
+                        v-for="(item, index) in lists"
+                        v-show="(activeIndex == 2 && !item.isFinished) || (activeIndex == 1 
+                        && item.isFinished) || activeIndex == 0"
+                    >
+                        <div class="card-content">
+                            <div class="card-content-inner">
+                                <div class="text" contenteditable="true"
+                                    @blur="update(index)"
+                                    v-html="item.content"
+                                >
+                                </div>
+                                <div class="opera-box clearfix">
+                                    <button type="button" class="button button-danger pull-right"
+                                        @click="check(index)"
+                                    >
+                                        <span class="icon icon-remove"></span>
+                                    </button>
+                                    <button type="button" class="button button-success pull-right"
+                                        :class="item.isFinished ? 'button-fill' : ''"
+                                        @click="item.isFinished = !item.isFinished"
+                                    >
+                                        <span class="icon icon-check"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-box"
+                    v-if="modalBox"
+                    @click.self="modalBox=false"
+                >
+                    <div class="alert-box">
+                        <p>您确定要删除?</p>
+                        <button type="button" class="button button-primary button-fill"
+                            @click.self="remove(delIndex)"
+                        >确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/index.js"></script>
+</html>
